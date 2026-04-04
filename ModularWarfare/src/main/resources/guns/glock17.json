@@ -1,0 +1,19 @@
+{
+  "internalName": "glock17",
+  "displayName": "Glock 17",
+  "weaponType": "PISTOL",
+  "gunDamage": 8.0,
+  "roundsPerMin": 400,
+  "bulletSpread": 0.08,
+  "numBullets": 1,
+  "reloadTime": 40,
+  "acceptedAmmo": ["9mm"],
+  "fireModes": ["SEMI"],
+  "modelSkins": [
+    {
+      "internalName": "default",
+      "displayName": "Default",
+      "skinAsset": "glock17"
+    }
+  ]
+}

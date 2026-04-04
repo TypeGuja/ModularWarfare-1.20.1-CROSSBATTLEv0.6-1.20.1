@@ -1,0 +1,59 @@
+Summary for modularwarfare-1.0.1f.jar
+Decompiled with CFR 0.152
+
+
+com.modularwarfare.loader.ObjModelBuilder
+----------------------------
+
+loadModelFromRL()
+  Loose catch block
+
+
+com.modularwarfare.common.protector.ModularProtector
+----------------------------
+
+requestPassword(java.lang.String )
+  Loose catch block
+
+
+net.lingala.zip4j.util.ArchiveMaintainer
+----------------------------
+
+initRemoveZipFile(net.lingala.zip4j.model.ZipModel net.lingala.zip4j.model.FileHeader net.lingala.zip4j.progress.ProgressMonitor )
+  Loose catch block
+initMergeSplitZipFile(net.lingala.zip4j.model.ZipModel java.io.File net.lingala.zip4j.progress.ProgressMonitor )
+  Loose catch block
+setComment(net.lingala.zip4j.model.ZipModel java.lang.String )
+  Loose catch block
+
+
+com.modularwarfare.common.guns.ItemGun
+----------------------------
+
+onUpdateClient(net.minecraft.entity.player.EntityPlayer net.minecraft.world.World net.minecraft.item.ItemStack com.modularwarfare.common.guns.ItemGun com.modularwarfare.common.guns.GunType )
+  Unable to fully structure code
+
+
+net.lingala.zip4j.zip.ZipEngine
+----------------------------
+
+initAddFiles(java.util.ArrayList net.lingala.zip4j.model.ZipParameters net.lingala.zip4j.progress.ProgressMonitor )
+  Loose catch block
+addStreamToZip(java.io.InputStream net.lingala.zip4j.model.ZipParameters )
+  Loose catch block
+removeFilesIfExists(java.util.ArrayList net.lingala.zip4j.model.ZipParameters net.lingala.zip4j.progress.ProgressMonitor )
+  Loose catch block
+
+
+net.lingala.zip4j.unzip.UnzipEngine
+----------------------------
+
+unzipFile(net.lingala.zip4j.progress.ProgressMonitor java.lang.String java.lang.String net.lingala.zip4j.model.UnzipParameters )
+  Unable to fully structure code
+
+
+com.modularwarfare.utility.ModConfig
+----------------------------
+
+<init>(java.io.File )
+  Loose catch block

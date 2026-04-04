@@ -1,0 +1,6 @@
+{
+  "internalName": "9mm",
+  "displayName": "9mm Parabellum",
+  "ammoCapacity": 15,
+  "maxStackSize": 64
+}

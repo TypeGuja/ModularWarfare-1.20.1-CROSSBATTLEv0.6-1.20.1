@@ -1,0 +1,42 @@
+# Это файл mods.toml для ModularWarfare
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All rights reserved"
+issueTrackerURL="https://github.com/ModularWarfare/ModularWarfare/issues"
+showAsSoftware=true
+
+[[mods]]
+modId="modularwarfare"
+version="1.0.1f"
+displayName="ModularWarfare"
+logoFile="modularwarfare.png"
+description='''
+A comprehensive firearms mod for Minecraft featuring realistic weapons, attachments, ballistics, and animations.
+
+Features:
+- Realistic weapon animations
+- Attachment system (sights, grips, suppressors, flashlights)
+- Bullet physics and ballistics
+- Custom armor and backpacks
+- Decal system for bullet holes
+- Shell casing physics
+- Dynamic crosshair
+- Hitmarkers
+'''
+authors="ModularWarfare Team"
+credits="Thanks to all contributors"
+displayURL="https://modularwarfare.com"
+
+[[dependencies.modularwarfare]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.modularwarfare]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.21)"
+ordering="NONE"
+side="BOTH"
