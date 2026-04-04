@@ -1,0 +1,6 @@
+{
+  "parent": "battle:custom/knife",
+  "textures": {
+    "0": "battle:item/knife"
+  }
+}

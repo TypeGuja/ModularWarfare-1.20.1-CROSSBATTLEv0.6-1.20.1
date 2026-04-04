@@ -1,0 +1,8 @@
+{
+  "parent": "battle:custom/iron_ore",
+  "textures": {
+    "all": "battle:blocks/iron_ore",
+    "particle": "battle:blocks/iron_ore",
+    "0": "battle:blocks/iron_ore"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "battle:custom/barricade",
+  "textures": {
+    "all": "battle:blocks/barricade",
+    "particle": "battle:blocks/barricade",
+    "0": "battle:blocks/barricade"
+  }
+}

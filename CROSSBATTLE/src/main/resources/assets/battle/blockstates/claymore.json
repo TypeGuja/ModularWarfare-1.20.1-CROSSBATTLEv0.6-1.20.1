@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "battle:block/claymore" },
+    "facing=east": { "model": "battle:block/claymore", "y": 90 },
+    "facing=south": { "model": "battle:block/claymore", "y": 180 },
+    "facing=west": { "model": "battle:block/claymore", "y": 270 }
+  }
+}

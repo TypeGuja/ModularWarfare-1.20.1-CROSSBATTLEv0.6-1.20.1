@@ -1,0 +1,114 @@
+{
+  "credit": "By NZ in Blockbench",
+  "texture_size": [32, 32],
+  "textures": {
+    "0": "battle:block/ore_coal",
+    "particle": "battle:block/ore_coal"
+  },
+  "elements": [
+    {
+      "from": [2, 0, 2],
+      "to": [6, 3, 6],
+      "faces": {
+        "north": {"uv": [2, 13, 6, 16], "texture": "#0"},
+        "east": {"uv": [2, 13, 6, 16], "texture": "#0"},
+        "south": {"uv": [2, 13, 6, 16], "texture": "#0"},
+        "west": {"uv": [2, 13, 6, 16], "texture": "#0"},
+        "up": {"uv": [2, 2, 6, 6], "texture": "#0"},
+        "down": {"uv": [2, 2, 6, 6], "texture": "#0"}
+      }
+    },
+    {
+      "from": [8, 1, 3],
+      "to": [12, 4, 7],
+      "faces": {
+        "north": {"uv": [8, 12, 12, 15], "texture": "#0"},
+        "east": {"uv": [3, 12, 7, 15], "texture": "#0"},
+        "south": {"uv": [8, 12, 12, 15], "texture": "#0"},
+        "west": {"uv": [3, 12, 7, 15], "texture": "#0"},
+        "up": {"uv": [8, 3, 12, 7], "texture": "#0"},
+        "down": {"uv": [8, 3, 12, 7], "texture": "#0"}
+      }
+    },
+    {
+      "from": [4, 2, 9],
+      "to": [8, 5, 13],
+      "faces": {
+        "north": {"uv": [4, 11, 8, 14], "texture": "#0"},
+        "east": {"uv": [9, 11, 13, 14], "texture": "#0"},
+        "south": {"uv": [4, 11, 8, 14], "texture": "#0"},
+        "west": {"uv": [9, 11, 13, 14], "texture": "#0"},
+        "up": {"uv": [4, 4, 8, 8], "texture": "#0"},
+        "down": {"uv": [4, 4, 8, 8], "texture": "#0"}
+      }
+    },
+    {
+      "from": [10, 0, 10],
+      "to": [13, 2, 13],
+      "faces": {
+        "north": {"uv": [10, 14, 13, 16], "texture": "#0"},
+        "east": {"uv": [10, 14, 13, 16], "texture": "#0"},
+        "south": {"uv": [10, 14, 13, 16], "texture": "#0"},
+        "west": {"uv": [10, 14, 13, 16], "texture": "#0"},
+        "up": {"uv": [10, 10, 13, 13], "texture": "#0"},
+        "down": {"uv": [10, 10, 13, 13], "texture": "#0"}
+      }
+    },
+    {
+      "from": [1, 0, 11],
+      "to": [4, 2, 14],
+      "faces": {
+        "north": {"uv": [1, 14, 4, 16], "texture": "#0"},
+        "east": {"uv": [11, 14, 14, 16], "texture": "#0"},
+        "south": {"uv": [1, 14, 4, 16], "texture": "#0"},
+        "west": {"uv": [11, 14, 14, 16], "texture": "#0"},
+        "up": {"uv": [1, 11, 4, 14], "texture": "#0"},
+        "down": {"uv": [1, 11, 4, 14], "texture": "#0"}
+      }
+    },
+    {
+      "from": [11, 1, 1],
+      "to": [14, 3, 4],
+      "faces": {
+        "north": {"uv": [11, 13, 14, 15], "texture": "#0"},
+        "east": {"uv": [1, 13, 4, 15], "texture": "#0"},
+        "south": {"uv": [11, 13, 14, 15], "texture": "#0"},
+        "west": {"uv": [1, 13, 4, 15], "texture": "#0"},
+        "up": {"uv": [11, 11, 14, 14], "texture": "#0"},
+        "down": {"uv": [11, 11, 14, 14], "texture": "#0"}
+      }
+    },
+    {
+      "from": [5, 0, 5],
+      "to": [7, 2, 7],
+      "faces": {
+        "north": {"uv": [5, 14, 7, 16], "texture": "#0"},
+        "east": {"uv": [5, 14, 7, 16], "texture": "#0"},
+        "south": {"uv": [5, 14, 7, 16], "texture": "#0"},
+        "west": {"uv": [5, 14, 7, 16], "texture": "#0"},
+        "up": {"uv": [5, 5, 7, 7], "texture": "#0"},
+        "down": {"uv": [5, 5, 7, 7], "texture": "#0"}
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "translation": [0, 1.5, 0],
+      "scale": [0.3, 0.3, 0.3]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 55, 0],
+      "translation": [-7.25, 2.25, 0],
+      "scale": [0.3, 0.3, 0.3]
+    },
+    "ground": {
+      "translation": [0, 1, 0],
+      "scale": [0.3, 0.3, 0.3]
+    },
+    "gui": {
+      "rotation": [30, -20, 0],
+      "translation": [0, 1, 0],
+      "scale": [0.4, 0.4, 0.4]
+    }
+  }
+}

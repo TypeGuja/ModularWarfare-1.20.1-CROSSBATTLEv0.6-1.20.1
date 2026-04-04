@@ -1,0 +1,6 @@
+{
+  "parent": "battle:custom/medkit",
+  "textures": {
+    "0": "battle:blocks/medkit"
+  }
+}

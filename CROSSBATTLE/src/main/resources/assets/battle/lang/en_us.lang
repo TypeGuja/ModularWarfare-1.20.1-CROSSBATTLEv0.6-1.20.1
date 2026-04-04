@@ -1,0 +1,16 @@
+tile.shop.name=Магазин
+tile.sandbag.name=Мешки с Песком
+tile.timerblock.name=Timer Block
+tile.destroyedgold.name=Destroyed Iron
+tile.orediamond.name=Алмаз
+tile.destroyediron.name=Destroyed Iron
+item.medkit.name=Аптечка
+tile.oreiron.name=Железо
+tile.destroyeddiamond.name=Destroyed Iron
+item.ledorub.name=Ледоруб
+tile.oregold.name=Золото
+tile.claymore.name=Мина "Клеймор"
+tile.orecoal.name=Уголь
+itemGroup.tabtab=Tab
+tile.destroyedcoal.name=Destroyed Coal
+item.knife.name=Боевой Нож

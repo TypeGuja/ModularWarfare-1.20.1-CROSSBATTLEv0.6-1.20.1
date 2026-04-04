@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "battle:block/sandbag" },
+    "facing=east": { "model": "battle:block/sandbag", "y": 90 },
+    "facing=south": { "model": "battle:block/sandbag", "y": 180 },
+    "facing=west": { "model": "battle:block/sandbag", "y": 270 }
+  }
+}

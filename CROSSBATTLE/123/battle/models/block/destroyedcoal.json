@@ -1,0 +1,8 @@
+{
+  "parent": "battle:custom/destroyed_coal",
+  "textures": {
+    "all": "battle:blocks/coal_ore",
+    "particle": "battle:blocks/coal_ore",
+    "0": "battle:blocks/coal_ore"
+  }
+}

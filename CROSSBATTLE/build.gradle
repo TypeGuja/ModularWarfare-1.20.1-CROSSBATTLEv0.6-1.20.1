@@ -1,0 +1,74 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
+}
+
+group = 'nazzy'
+version = '1.0.0'
+
+base {
+    archivesName = 'battle'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.mojang_level', 'debug'
+            mods {
+                battle {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.mojang_level', 'debug'
+            mods {
+                battle {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.mojang_level', 'debug'
+            args '--mod', 'battle', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            mods {
+                battle {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.3.0'
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title": "battle",
+                "Specification-Vendor": "nazzy",
+                "Specification-Version": "1",
+                "Implementation-Title": project.name,
+                "Implementation-Version": project.jar.archiveVersion,
+                "Implementation-Vendor": "nazzy"
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')

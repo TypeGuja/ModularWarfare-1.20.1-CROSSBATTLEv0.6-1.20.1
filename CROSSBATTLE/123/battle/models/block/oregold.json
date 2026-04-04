@@ -1,0 +1,8 @@
+{
+  "parent": "battle:custom/gold_ore",
+  "textures": {
+    "all": "battle:blocks/gold_ore",
+    "particle": "battle:blocks/gold_ore",
+    "0": "battle:blocks/gold_ore"
+  }
+}

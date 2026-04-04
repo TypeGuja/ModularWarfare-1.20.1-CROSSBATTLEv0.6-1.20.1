@@ -1,0 +1,101 @@
+{
+  "got": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "battle:got",
+        "stream": false
+      }
+    ]
+  },
+  "knife_throw": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "battle:knife_throw",
+        "stream": false
+      }
+    ]
+  },
+  "shop_start": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "battle:shop_start",
+        "stream": false
+      }
+    ]
+  },
+  "shop_click": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "battle:shop_click",
+        "stream": false
+      }
+    ]
+  },
+  "shop_error": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "battle:shop_error",
+        "stream": false
+      }
+    ]
+  },
+  "shop_succ": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "battle:shop_succ",
+        "stream": false
+      }
+    ]
+  },
+  "team_all_dead": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "battle:team_all_dead",
+        "stream": false
+      }
+    ]
+  },
+  "team_one_dead": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "battle:team_one_dead",
+        "stream": false
+      }
+    ]
+  },
+  "team_respawn": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "battle:team_respawn",
+        "stream": false
+      }
+    ]
+  },
+  "match_starts": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "battle:match_starts",
+        "stream": false
+      }
+    ]
+  },
+  "team_death": {
+    "category": "master",
+    "sounds": [
+      {
+        "name": "battle:team_death",
+        "stream": false
+      }
+    ]
+  }
+}

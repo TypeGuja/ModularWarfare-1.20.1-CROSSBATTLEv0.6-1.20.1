@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "normal": {
+      "model": "battle:claymore"
+    },
+    "facing=north": {
+      "model": "battle:claymore"
+    },
+    "facing=east": {
+      "model": "battle:claymore",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "battle:claymore",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "battle:claymore",
+      "y": 270
+    }
+  }
+}

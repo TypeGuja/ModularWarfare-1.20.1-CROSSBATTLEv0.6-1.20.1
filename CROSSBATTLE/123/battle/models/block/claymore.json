@@ -1,0 +1,8 @@
+{
+  "parent": "battle:custom/claymore",
+  "textures": {
+    "all": "battle:blocks/laymore",
+    "particle": "battle:blocks/laymore",
+    "0": "battle:blocks/laymore"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "battle:blocks/diamond_ore",
+    "up": "battle:blocks/diamond_ore",
+    "north": "battle:blocks/diamond_ore",
+    "east": "battle:blocks/diamond_ore",
+    "south": "battle:blocks/diamond_ore",
+    "west": "battle:blocks/diamond_ore",
+    "particle": "battle:blocks/diamond_ore"
+  }
+}

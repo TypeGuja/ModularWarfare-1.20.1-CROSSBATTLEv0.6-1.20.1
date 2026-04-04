@@ -1,0 +1,8 @@
+{
+  "parent": "battle:custom/destroyed_diamond",
+  "textures": {
+    "all": "battle:blocks/diamond_ore",
+    "particle": "battle:blocks/diamond_ore",
+    "0": "battle:blocks/diamond_ore"
+  }
+}

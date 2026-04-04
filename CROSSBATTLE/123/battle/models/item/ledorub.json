@@ -1,0 +1,6 @@
+{
+  "parent": "battle:custom/pickaxe",
+  "textures": {
+    "0": "battle:blocks/pickaxe"
+  }
+}

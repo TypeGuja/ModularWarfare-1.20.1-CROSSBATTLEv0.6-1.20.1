@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "normal": {
+      "model": "battle:sandbag"
+    },
+    "facing=north": {
+      "model": "battle:sandbag"
+    },
+    "facing=east": {
+      "model": "battle:sandbag",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "battle:sandbag",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "battle:sandbag",
+      "y": 270
+    }
+  }
+}
