@@ -1,0 +1,8 @@
+{
+  "internalName": "prototype.uziammo",
+  "displayName": "UZI Mag 25rnd",
+  "ammoCapacity": 25,
+  "magazineCount": 1,
+  "subAmmo": ["prototype.9x19"],
+  "allowEmptyMagazines": true
+}

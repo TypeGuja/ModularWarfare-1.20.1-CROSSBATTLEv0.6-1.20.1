@@ -1,0 +1,8 @@
+{
+  "internalName": "prototype.mp40ammo",
+  "displayName": "MP40 Mag 32rnd",
+  "ammoCapacity": 32,
+  "magazineCount": 1,
+  "subAmmo": ["prototype.9x19"],
+  "allowEmptyMagazines": true
+}

@@ -3,6 +3,7 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/modularwarfare-1.0.1f.jar!/" />
       <root url="jar://$PROJECT_DIR$/build/libs/modularwarfare-1.0.1f.jar!/" />
+      <root url="jar://$PROJECT_DIR$/build/libs/modularwarfare-1.0.1f.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

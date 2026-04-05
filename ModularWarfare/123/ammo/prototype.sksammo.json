@@ -1,0 +1,8 @@
+{
+  "internalName": "prototype.sksammo",
+  "displayName": "SKS Stripper Clip 10rnd",
+  "ammoCapacity": 10,
+  "subAmmo": ["prototype.7_62x54"],
+  "magazineCount": 1,
+  "reloadTime": 4
+}

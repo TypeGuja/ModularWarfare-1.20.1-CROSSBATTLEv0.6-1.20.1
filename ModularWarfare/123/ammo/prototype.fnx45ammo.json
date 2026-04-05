@@ -1,0 +1,8 @@
+{
+  "internalName": "prototype.fnx45ammo",
+  "displayName": "FNX45 Mag 10rnd",
+  "ammoCapacity": 10,
+  "magazineCount": 1,
+  "subAmmo": ["prototype.9x19"],
+  "allowEmptyMagazines": true
+}

@@ -1,0 +1,10 @@
+{
+  "displayName": "7.62x39mm",
+  "ammoCapacity": 30,
+  "magazineCount": 1,
+  "allowEmptyMagazines": true,
+  "isDynamicAmmo": false,
+  "reloadTimeFactor": 1.0,
+  "sameTextureAsGun": true,
+  "maxStackSize": 64
+}

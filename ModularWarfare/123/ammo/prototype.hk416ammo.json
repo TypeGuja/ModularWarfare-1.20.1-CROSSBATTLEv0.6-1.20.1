@@ -1,0 +1,8 @@
+{
+  "internalName": "prototype.hk416ammo",
+  "displayName": "HK416 Mag 30rnd",
+  "ammoCapacity": 30,
+  "magazineCount": 1,
+  "subAmmo": ["prototype.5_56x45"],
+  "allowEmptyMagazines": true
+}

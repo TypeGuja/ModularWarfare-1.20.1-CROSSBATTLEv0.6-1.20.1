@@ -1,0 +1,9 @@
+{
+  "displayName": "AK74u Flashlight",
+  "internalName": "prototype.ak74u_flashlight",
+  "attachmentType": "Flashlight",
+  "modelSkins": [{
+    "skinAsset": "prototype.ak74u_flashlight",
+    "displayName": "AK74u Flashlight - Default"
+  }]
+}
