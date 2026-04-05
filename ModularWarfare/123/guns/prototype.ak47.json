@@ -1,0 +1,33 @@
+{
+  "displayName": "AK-47",
+  "weaponType": "RIFLE",
+  "gunDamage": 8.5,
+  "moveSpeedModifier": 0.85,
+  "gunDamageHeadshotBonus": 8.5,
+  "weaponMaxRange": 250,
+  "weaponEffectiveRange": 120,
+  "numBullets": 1,
+  "bulletSpread": 0.045,
+  "roundsPerMin": 600,
+  "recoilPitch": 12.0,
+  "recoilYaw": 2.5,
+  "accuracySneakFactor": 0.6,
+  "randomRecoilPitch": 0.4,
+  "randomRecoilYaw": 0.3,
+  "recoilAimReducer": 0.5,
+  "fireModes": ["SEMI", "FULL"],
+  "acceptedAttachments": {},
+  "reloadTime": 48,
+  "acceptedAmmo": ["prototype.ak47ammo"],
+  "allowDefaultSounds": true,
+  "shellEjectOffsetNormal": {
+    "x": -0.85,
+    "y": 0.15,
+    "z": 0.65
+  },
+  "shellEjectOffsetAiming": {
+    "x": 0.0,
+    "y": 0.18,
+    "z": 0.85
+  }
+}
