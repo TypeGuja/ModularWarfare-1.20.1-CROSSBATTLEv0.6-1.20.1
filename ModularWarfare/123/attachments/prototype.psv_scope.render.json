@@ -1,0 +1,8 @@
+{
+  "modelFileName": "psv_scope.obj",
+  "extra": {"modelScale": 1.0},
+  "sight": {
+    "translateSight": {"x": -3.0, "y": -0.83, "z": 0.0},
+    "rotateSight": {"x": 0.0, "y": 0.0, "z": 0.0}
+  }
+}

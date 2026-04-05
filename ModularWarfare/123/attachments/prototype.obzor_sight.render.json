@@ -1,0 +1,8 @@
+{
+  "modelFileName": "obzor_sight.obj",
+  "extra": {"modelScale": 1.0},
+  "sight": {
+    "translateSight": {"x": 0.0, "y": -0.55, "z": 0.0},
+    "rotateSight": {"x": 0.0, "y": 0.0, "z": 0.0}
+  }
+}

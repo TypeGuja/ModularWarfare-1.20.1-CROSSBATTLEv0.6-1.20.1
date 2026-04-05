@@ -1,0 +1,7 @@
+{
+  "displayName": "Hiking Pack",
+  "internalName": "prototype.hikingpack",
+  "size": 16,
+  "allowSmallerBackpackStorage": false,
+  "maxWeaponStorage": 5
+}

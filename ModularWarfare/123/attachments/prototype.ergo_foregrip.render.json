@@ -1,0 +1,7 @@
+{
+  "modelFileName": "ergo_foregrip.obj",
+  "extra": {"modelScale": 1.0},
+  "grip": {
+    "leftArmOffset": {"x": -0.01, "y": -0.01, "z": 0.0}
+  }
+}

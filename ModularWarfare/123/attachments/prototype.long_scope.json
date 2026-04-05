@@ -1,0 +1,14 @@
+{
+  "displayName": "Long Scope",
+  "internalName": "prototype.long_scope",
+  "attachmentType": "Sight",
+  "modelSkins": [{
+    "skinAsset": "prototype.long_scope",
+    "displayName": "Long Scope - Default"
+  }],
+  "sight": {
+    "scopeType": "EIGHT",
+    "sensivityScopeFactor": 0.6,
+    "dotColorType": "RED"
+  }
+}
