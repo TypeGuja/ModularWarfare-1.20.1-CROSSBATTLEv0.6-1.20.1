@@ -36,24 +36,59 @@ public class ModelGun extends MWModelBase {
 
     public ModelGun(GunRenderConfig config, BaseType type) {
         this.config = config;
-        if (config != null && config.modelFileName != null && config.modelFileName.endsWith(".obj")) {
-            try {
-                if (type.isInDirectory) {
-                    this.staticModel = ObjModelLoader.load(String.format("%s/obj/%s/%s", type.contentPack, type.getAssetDir(), config.modelFileName));
-                } else {
-                    this.staticModel = ObjModelLoader.load(type, String.format("obj/%s/%s", type.getAssetDir(), config.modelFileName));
-                }
-            } catch (Exception e) {
-                ModularWarfare.LOGGER.error("Failed to load model: " + config.modelFileName, e);
+
+        ModularWarfare.LOGGER.info("========================================");
+        ModularWarfare.LOGGER.info("ModelGun constructor for: " + type.internalName);
+
+        if (config != null && config.modelFileName != null && !config.modelFileName.isEmpty()) {
+            String modelPath = config.modelFileName;
+
+            if (!modelPath.endsWith(".obj")) {
+                modelPath = modelPath + ".obj";
             }
-        } else if (config != null && config.modelFileName != null) {
-            ModularWarfare.LOGGER.info(String.format("Internal error: %s is not a valid format.", config.modelFileName));
+
+            String[] pathsToTry = {
+                    "assets/modularwarfare/obj/guns/" + modelPath,
+                    "obj/guns/" + modelPath,
+                    modelPath
+            };
+
+            boolean loaded = false;
+
+            for (String tryPath : pathsToTry) {
+                ModularWarfare.LOGGER.info("Trying to load: " + tryPath);
+                try {
+                    this.staticModel = ObjModelLoader.load(tryPath);
+                    if (this.staticModel != null && !this.staticModel.getParts().isEmpty()) {
+                        ModularWarfare.LOGGER.info("✅ SUCCESS! Loaded from: " + tryPath);
+                        ModularWarfare.LOGGER.info("   Parts: " + this.staticModel.getParts().size());
+                        for (String partName : this.staticModel.getParts().keySet()) {
+                            ModularWarfare.LOGGER.info("     - Part: " + partName);
+                        }
+                        loaded = true;
+                        break;
+                    }
+                } catch (Exception e) {
+                    ModularWarfare.LOGGER.warn("Failed: " + e.getMessage());
+                }
+            }
+
+            if (!loaded) {
+                ModularWarfare.LOGGER.error("❌ Could not load model for " + type.internalName);
+            }
+        } else {
+            ModularWarfare.LOGGER.warn("No modelFileName in config for: " + type.internalName);
         }
+
+        ModularWarfare.LOGGER.info("========================================");
     }
 
     public void renderPart(PoseStack poseStack, VertexConsumer consumer, String part, float scale) {
-        if (staticModel != null && staticModel.getPart(part) != null) {
-            staticModel.getPart(part).render(poseStack, consumer, scale);
+        if (staticModel != null) {
+            var partRenderer = staticModel.getPart(part);
+            if (partRenderer != null) {
+                partRenderer.render(poseStack, consumer, scale);
+            }
         }
     }
 

@@ -1,0 +1,12 @@
+{
+  "modelFileName": "ak47.obj",
+  "arms": {
+    "leftHandAmmo": true,
+    "actionArm": "Left",
+    "actionType": "Charge"
+  },
+  "extra": {
+    "modelScale": 1.2,
+    "reloadAnimation": "rifle"
+  }
+}

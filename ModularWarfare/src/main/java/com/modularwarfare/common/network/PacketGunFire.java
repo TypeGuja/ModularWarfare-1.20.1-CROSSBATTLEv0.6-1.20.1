@@ -7,7 +7,9 @@ import com.modularwarfare.common.guns.WeaponFireMode;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.RegistryObject;
 
 public class PacketGunFire extends PacketBase {
     public String internalname;
@@ -52,15 +54,19 @@ public class PacketGunFire extends PacketBase {
     @Override
     public void handleServerSide(Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
-            ItemGun itemGun = ModularWarfare.gunTypes.get(this.internalname);
-            if (itemGun != null) {
-                ItemStack gunStack = player.getMainHandItem();
-                WeaponFireMode fireMode = GunType.getFireMode(gunStack);
-                if (fireMode != null) {
-                    itemGun.fireServer(player, player.level(), gunStack, itemGun, fireMode,
-                            this.fireTickDelay, this.recoilPitch, this.recoilYaw,
-                            this.recoilAimReducer, this.bulletSpread);
-                }
+            RegistryObject<Item> registryObject = ModularWarfare.gunRegistry.get(this.internalname);
+            if (registryObject == null) {
+                return;
+            }
+            if (!(registryObject.get() instanceof ItemGun itemGun)) {
+                return;
+            }
+            ItemStack gunStack = player.getMainHandItem();
+            WeaponFireMode fireMode = GunType.getFireMode(gunStack);
+            if (fireMode != null) {
+                itemGun.fireServer(player, player.level(), gunStack, itemGun, fireMode,
+                        this.fireTickDelay, this.recoilPitch, this.recoilYaw,
+                        this.recoilAimReducer, this.bulletSpread);
             }
         }
     }

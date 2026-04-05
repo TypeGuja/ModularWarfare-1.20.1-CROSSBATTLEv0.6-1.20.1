@@ -120,6 +120,7 @@ public class RenderGunStatic extends CustomItemRenderer {
             case EQUIPPED_FIRST_PERSON:
                 if (mc.player != null) {
                     renderFirstPerson(poseStack, buffer, model, anim, gunType, item, mc.player);
+                    return;
                 }
                 break;
         }
@@ -131,7 +132,6 @@ public class RenderGunStatic extends CustomItemRenderer {
         String path = gunType.modelSkins != null && skinId > 0 && skinId < gunType.modelSkins.length ?
                 gunType.modelSkins[skinId].getSkin() : (gunType.modelSkins != null && gunType.modelSkins.length > 0 ? gunType.modelSkins[0].getSkin() : "default");
 
-        // Bind texture and render model
         VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(new ResourceLocation("modularwarfare",
                 String.format("textures/skins/guns/%s.png", path))));
 
@@ -148,113 +148,57 @@ public class RenderGunStatic extends CustomItemRenderer {
 
     private void renderFirstPerson(PoseStack poseStack, MultiBufferSource.BufferSource buffer, ModelGun model,
                                    AnimStateMachine anim, GunType gunType, ItemStack item, LocalPlayer player) {
-        // Calculate ADS and sprint switches
-        float adsSpeed = (0.1f + model.config.extra.adsSpeed) * RenderParameters.smoothing;
-        float adsSwitch = anim.reloading ? 0.0f :
-                (Minecraft.getInstance().options.keyUse.isDown() && !anim.attachmentMode) ?
-                        Math.min(1.0f, RenderParameters.adsSwitch + adsSpeed) :
-                        Math.max(0.0f, RenderParameters.adsSwitch - adsSpeed);
-        RenderParameters.adsSwitch = adsSwitch;
 
-        float sprintSpeed = 0.15f * RenderParameters.smoothing;
-        float sprintSwitch = (player.isSprinting() && !anim.attachmentMode) ?
-                Math.min(1.0f, RenderParameters.sprintSwitch + sprintSpeed) :
-                Math.max(0.0f, RenderParameters.sprintSwitch - sprintSpeed);
-        RenderParameters.sprintSwitch = sprintSwitch;
+        ModularWarfare.LOGGER.info("========== renderFirstPerson CALLED ==========");
+        ModularWarfare.LOGGER.info("Model: " + (model != null ? "exists" : "null"));
+        ModularWarfare.LOGGER.info("Model staticModel: " + (model.staticModel != null ? "exists" : "null"));
+        ModularWarfare.LOGGER.info("Model parts count: " + (model.staticModel != null ? model.staticModel.getParts().size() : 0));
 
-        float attachmentSpeed = 0.15f * RenderParameters.smoothing;
-        float attachmentSwitch = anim.attachmentMode ?
-                Math.min(1.0f, RenderParameters.attachmentSwitch + attachmentSpeed) :
-                Math.max(0.0f, RenderParameters.attachmentSwitch - attachmentSpeed);
-        RenderParameters.attachmentSwitch = attachmentSwitch;
-
-        float crouchSpeed = 0.15f * RenderParameters.smoothing;
-        float crouchSwitch = player.isCrouching() ?
-                Math.min(1.0f, RenderParameters.crouchSwitch + crouchSpeed) :
-                Math.max(0.0f, RenderParameters.crouchSwitch - crouchSpeed);
-        RenderParameters.crouchSwitch = crouchSwitch;
-
-        float reloadSpeed = 0.15f * RenderParameters.smoothing;
-        float reloadSwitch = anim.reloading ?
-                Math.max(0.0f, RenderParameters.reloadSwitch - reloadSpeed) :
-                Math.min(1.0f, RenderParameters.reloadSwitch + reloadSpeed);
-        RenderParameters.reloadSwitch = reloadSwitch;
-
-        // Apply transforms
         float worldScale = 0.0625f;
         float modelScale = model.config.extra.modelScale;
 
-        Vector3f customHipRotation = new Vector3f(
-                model.config.aim.rotateHipPosition.x + model.config.sprint.sprintRotate.x * sprintSwitch * reloadSwitch,
-                model.config.aim.rotateHipPosition.y + model.config.sprint.sprintRotate.y * sprintSwitch * reloadSwitch,
-                model.config.aim.rotateHipPosition.z + model.config.sprint.sprintRotate.z * sprintSwitch * reloadSwitch);
+        // ========== БАЗОВЫЕ ТРАНСФОРМАЦИИ ==========
+        poseStack.translate(0, 0, 0);
+        poseStack.scale(1.0f, 1.0f, 1.0f);
 
-        Vector3f customHipTranslate = new Vector3f(
-                model.config.aim.translateHipPosition.x + model.config.sprint.sprintTranslate.x * sprintSwitch * reloadSwitch,
-                model.config.aim.translateHipPosition.y + model.config.sprint.sprintTranslate.y * sprintSwitch * reloadSwitch,
-                model.config.aim.translateHipPosition.z + model.config.sprint.sprintTranslate.z * sprintSwitch * reloadSwitch);
-
-        Vector3f customAimRotation = new Vector3f(
-                model.config.aim.rotateAimPosition.x,
-                model.config.aim.rotateAimPosition.y,
-                model.config.aim.rotateAimPosition.z);
-
-        Vector3f customAimTranslate = new Vector3f(
-                model.config.aim.translateAimPosition.x,
-                model.config.aim.translateAimPosition.y,
-                model.config.aim.translateAimPosition.z);
-
-        float rotateX = customHipRotation.x - (customAimRotation.x + customHipRotation.x) * adsSwitch;
-        float rotateY = 46.0f + customHipRotation.y + RenderParameters.swayHorizontal -
-                (1.0f + customAimRotation.y + customHipRotation.y + RenderParameters.swayHorizontal) * adsSwitch;
-        float rotateZ = 1.0f + customHipRotation.z + RenderParameters.swayVertical -
-                (1.0f + customAimRotation.z + customHipRotation.z + RenderParameters.swayVertical) * adsSwitch;
-
-        float translateX = -1.3f + customHipTranslate.x - (customAimTranslate.x + customHipTranslate.x) * adsSwitch;
-        float translateY = 0.834f + customHipTranslate.y - (-0.064f + customAimTranslate.y + customHipTranslate.y) * adsSwitch;
-        float translateZ = -1.05f + customHipTranslate.z - (0.35f + customAimTranslate.z + customHipTranslate.z) * adsSwitch;
-
-        // Weapon bobbing
-        float bobModifier = player.isSprinting() ? (anim.reloading ? 0.7f : 0.2f) : (anim.reloading ? 0.75f : 0.4f);
-        if (ClientRenderHooks.isAimingScope) {
-            bobModifier *= 0.5f;
+        // ========== ЗАГРУЗКА ТЕКСТУРЫ ==========
+        int skinId = 0;
+        if (item.hasTag() && item.getTag().contains("skinId")) {
+            skinId = item.getTag().getInt("skinId");
         }
 
-        float f1 = (player.walkDist - player.walkDistO) * bobModifier;
-        float f2 = -(player.walkDist + f1 * RenderParameters.smoothing) * bobModifier;
-        float f3 = (player.xxa + (player.zza - player.xxa) * RenderParameters.smoothing) * bobModifier;
-        float f4 = (player.yya + (player.zza - player.yya) * RenderParameters.smoothing) * bobModifier;
+        String path = gunType.modelSkins != null && skinId > 0 && skinId < gunType.modelSkins.length ?
+                gunType.modelSkins[skinId].getSkin() :
+                (gunType.modelSkins != null && gunType.modelSkins.length > 0 ? gunType.modelSkins[0].getSkin() : "default");
 
-        poseStack.translate(Mth.sin(f2 * (float) Math.PI) * f3 * 0.5f,
-                -Math.abs(Mth.cos(f2 * (float) Math.PI) * f3), 0.0f);
-        poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.sin(f2 * (float) Math.PI) * f3 * 3.0f));
-        poseStack.mulPose(Axis.XP.rotationDegrees(Math.abs(Mth.cos(f2 * (float) Math.PI - 0.2f)) * f3 * 5.0f));
-        poseStack.mulPose(Axis.XP.rotationDegrees(f4));
+        ResourceLocation texture = new ResourceLocation("modularwarfare",
+                String.format("textures/skins/guns/%s.png", path));
 
-        poseStack.mulPose(Axis.XP.rotationDegrees(rotateX));
-        poseStack.mulPose(Axis.YP.rotationDegrees(rotateY));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(rotateZ));
-        poseStack.translate(translateX + model.config.extra.crouchZoom * crouchSwitch, translateY, translateZ);
+        ModularWarfare.LOGGER.info("Texture path: " + texture.toString());
 
-        Vector3f customAttachmentModeRotation = new Vector3f(
-                model.config.attachments.attachmentModeRotate.x * attachmentSwitch,
-                model.config.attachments.attachmentModeRotate.y * attachmentSwitch,
-                model.config.attachments.attachmentModeRotate.z * attachmentSwitch);
-        poseStack.mulPose(Axis.XP.rotationDegrees(customAttachmentModeRotation.x));
-        poseStack.mulPose(Axis.YP.rotationDegrees(customAttachmentModeRotation.y));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(customAttachmentModeRotation.z));
+        VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutoutNoCull(texture));
 
-        // Recoil
-        Random random = new Random();
-        float randomShake = -1.5f + random.nextFloat() * 3.0f;
-        poseStack.translate(-(anim.lastGunRecoil + (anim.gunRecoil - anim.lastGunRecoil) * RenderParameters.smoothing)
-                * model.config.extra.modelRecoilBackwards, 0.0f, 0.0f);
-        poseStack.mulPose(Axis.ZP.rotationDegrees((anim.lastGunRecoil + (anim.gunRecoil - anim.lastGunRecoil) * RenderParameters.smoothing)
-                * model.config.extra.modelRecoilUpwards));
-        poseStack.mulPose(Axis.YP.rotationDegrees((-anim.lastGunRecoil + (anim.gunRecoil - anim.lastGunRecoil) * RenderParameters.smoothing)
-                * randomShake * model.config.extra.modelRecoilShake));
-        poseStack.mulPose(Axis.XP.rotationDegrees((-anim.lastGunRecoil + (anim.gunRecoil - anim.lastGunRecoil) * RenderParameters.smoothing)
-                * randomShake * model.config.extra.modelRecoilShake));
+        // ========== ПОЗИЦИОНИРОВАНИЕ МОДЕЛИ ==========
+        poseStack.pushPose();
+
+        // Центрируем модель перед камерой
+        poseStack.translate(0.5f, 0.5f, -1.0f);
+        poseStack.scale(modelScale, modelScale, modelScale);
+
+        // Пробуем рендерить все части
+        ModularWarfare.LOGGER.info("Rendering model parts...");
+
+        model.renderPart(poseStack, consumer, "gunModel", worldScale);
+        model.renderPart(poseStack, consumer, "slideModel", worldScale);
+        model.renderPart(poseStack, consumer, "ammoModel", worldScale);
+        model.renderPart(poseStack, consumer, "flashModel", worldScale);
+
+        poseStack.popPose();
+
+        // Сброс буфера
+        buffer.endBatch();
+
+        ModularWarfare.LOGGER.info("========== renderFirstPerson FINISHED ==========");
     }
 
     public static String getStaticArmState(ModelGun model, AnimStateMachine anim) {

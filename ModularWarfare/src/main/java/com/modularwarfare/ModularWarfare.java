@@ -1,23 +1,22 @@
 package com.modularwarfare;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.modularwarfare.client.ClientProxy;
+import com.modularwarfare.client.config.GunRenderConfig;
+import com.modularwarfare.client.model.ModelGun;
+import com.modularwarfare.common.CommonProxy;
 import com.modularwarfare.common.MWTab;
 import com.modularwarfare.common.entity.ModEntities;
-import com.modularwarfare.common.guns.ItemAmmo;
-import com.modularwarfare.common.guns.ItemAttachment;
-import com.modularwarfare.common.guns.ItemGun;
-import com.modularwarfare.common.type.BaseType;
-import com.mojang.logging.LogUtils;
-import com.modularwarfare.client.ClientProxy;
-import com.modularwarfare.common.CommonProxy;
-import com.modularwarfare.common.armor.ItemMWArmor;
-import com.modularwarfare.common.backpacks.ItemBackpack;
+import com.modularwarfare.common.guns.*;
 import com.modularwarfare.common.handler.PlayerHandler;
 import com.modularwarfare.common.network.NetworkHandler;
 import com.modularwarfare.common.protector.ModularProtector;
 import com.modularwarfare.common.type.ContentTypes;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.modularwarfare.common.type.BaseType;
+import com.mojang.logging.LogUtils;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -26,6 +25,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
 import java.io.*;
@@ -49,37 +51,118 @@ public class ModularWarfare {
     public static PlayerHandler PLAYERHANDLER;
     public static ModConfig CONFIG;
 
-    public static Map<String, ItemGun> gunTypes = new HashMap<>();
-    public static Map<String, ItemAmmo> ammoTypes = new HashMap<>();
-    public static Map<String, ItemAttachment> attachmentTypes = new HashMap<>();
-    public static Map<String, ItemMWArmor> armorTypes = new HashMap<>();
-    public static Map<String, ItemBackpack> backpackTypes = new HashMap<>();
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
+
+    public static Map<String, RegistryObject<Item>> gunRegistry = new HashMap<>();
+    public static Map<String, RegistryObject<Item>> ammoRegistry = new HashMap<>();
+    public static Map<String, RegistryObject<Item>> attachmentRegistry = new HashMap<>();
 
     public ModularWarfare() {
         INSTANCE = this;
-
         ModConfig.init();
+
+        loadAndRegisterItems();
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModEntities.ENTITIES.register(modEventBus);
         MWTab.TABS.register(modEventBus);
+        ITEMS.register(modEventBus);
 
         PROXY = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
-
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
 
         MOD_DIR = new File(FMLPaths.CONFIGDIR.get().toFile().getParentFile(), "ModularWarfare");
         if (!MOD_DIR.exists()) {
             MOD_DIR.mkdirs();
-            LOGGER.info("Created ModularWarfare folder, it's recommended to install content packs.");
-            LOGGER.info("As the mod itself doesn't come with any content.");
+            LOGGER.info("Created ModularWarfare folder");
         }
 
         ContentTypes.registerTypes();
-
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    private void loadAndRegisterItems() {
+        LOGGER.info("Loading and registering items from JSON...");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        // ТОЛЬКО AK-47 ДЛЯ ТЕСТА
+        String[] gunFiles = {
+                "guns/prototype.ak47.json"
+        };
+
+        for (String file : gunFiles) {
+            try (InputStream is = ModularWarfare.class.getClassLoader().getResourceAsStream(file)) {
+                if (is != null) {
+                    String json = new String(is.readAllBytes());
+                    String internalName = file.substring(file.lastIndexOf('/') + 1, file.lastIndexOf('.'));
+
+                    GunType gunType = gson.fromJson(json, GunType.class);
+                    gunType.internalName = internalName;
+                    if (gunType.displayName == null) gunType.displayName = internalName;
+                    if (gunType.maxStackSize == null) gunType.maxStackSize = 1;
+
+                    // ========== КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: ЗАГРУЖАЕМ RENDER CONFIG ==========
+                    String renderFilePath = file.replace(".json", ".render.json");
+                    try (InputStream renderIs = ModularWarfare.class.getClassLoader().getResourceAsStream(renderFilePath)) {
+                        if (renderIs != null) {
+                            String renderJson = new String(renderIs.readAllBytes());
+                            GunRenderConfig renderConfig = gson.fromJson(renderJson, GunRenderConfig.class);
+                            gunType.model = new ModelGun(renderConfig, gunType);
+                            LOGGER.info("✅ Loaded render config for: " + internalName);
+                            LOGGER.info("   modelFileName: " + renderConfig.modelFileName);
+                        } else {
+                            LOGGER.warn("❌ No render config for " + internalName);
+                        }
+                    } catch (Exception e) {
+                        LOGGER.error("Failed to load render config for " + internalName, e);
+                    }
+                    // =================================================================
+
+                    // ТЕПЕРЬ ВЫЗЫВАЕМ loadExtraValues - модель уже есть, не перезапишется
+                    gunType.loadExtraValues();
+
+                    final GunType finalGunType = gunType;
+                    RegistryObject<Item> registryObject = ITEMS.register(internalName,
+                            () -> new ItemGun(finalGunType));
+
+                    gunRegistry.put(internalName, registryObject);
+                    LOGGER.info("✅ Registered gun: " + internalName);
+                }
+            } catch (Exception e) {
+                LOGGER.error("Failed to register gun from " + file, e);
+            }
+        }
+
+        // Патроны для AK-47
+        String[] ammoFiles = {
+                "ammo/prototype.ak47ammo.json"
+        };
+
+        for (String file : ammoFiles) {
+            try (InputStream is = ModularWarfare.class.getClassLoader().getResourceAsStream(file)) {
+                if (is != null) {
+                    String internalName = file.substring(file.lastIndexOf('/') + 1, file.lastIndexOf('.'));
+
+                    AmmoType ammoType = gson.fromJson(new InputStreamReader(is), AmmoType.class);
+                    ammoType.internalName = internalName;
+                    if (ammoType.displayName == null) ammoType.displayName = internalName;
+                    if (ammoType.maxStackSize == null) ammoType.maxStackSize = 64;
+
+                    final AmmoType finalAmmoType = ammoType;
+                    RegistryObject<Item> registryObject = ITEMS.register(internalName,
+                            () -> new ItemAmmo(finalAmmoType));
+
+                    ammoRegistry.put(internalName, registryObject);
+                    LOGGER.info("✅ Registered ammo: " + internalName);
+                }
+            } catch (Exception e) {
+                LOGGER.error("Failed to register ammo from " + file, e);
+            }
+        }
+
+        LOGGER.info("Registration complete. Guns: " + gunRegistry.size() + ", Ammo: " + ammoRegistry.size());
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -90,7 +173,6 @@ public class ModularWarfare {
             MOD_TAB = MWTab.MOD_TAB.get();
         });
         PROXY.registerEventHandlers();
-        loadContentPacks(false);
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
@@ -98,21 +180,33 @@ public class ModularWarfare {
         PROXY.init();
     }
 
-    public static void loadContentPacks(boolean reload) {
-        loadContent();
-    }
-
-    private static void loadContent() {
-    }
+    public static void loadContentPacks(boolean reload) {}
 
     public static <T> T getRenderConfig(BaseType baseType, Gson gson, Class<T> typeClass) {
-        return null;
+        // ПЫТАЕМСЯ ЗАГРУЗИТЬ РЕАЛЬНЫЙ КОНФИГ
+        try {
+            String configPath = String.format("%s/%s.render.json", baseType.getAssetDir(), baseType.internalName);
+            InputStream is = ModularWarfare.class.getClassLoader().getResourceAsStream(configPath);
+            if (is != null) {
+                String json = new String(is.readAllBytes());
+                LOGGER.info("Loaded render config from: " + configPath);
+                return gson.fromJson(json, typeClass);
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Could not load render config for " + baseType.internalName);
+        }
+
+        // ФОЛБЭК - пустой конфиг
+        try {
+            return typeClass.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    // ======================= ВНУТРЕННИЙ КЛАСС КОНФИГА =======================
+    // ======================= КОНФИГ =======================
     public static class ModConfig {
         public static ModConfig INSTANCE;
-
         public boolean enableHitmarker = true;
         public boolean enableModifiedInventory = true;
         public boolean enableDynamicCrosshair = true;
@@ -129,26 +223,18 @@ public class ModularWarfare {
         public static void init() {
             File configDir = FMLPaths.CONFIGDIR.get().toFile();
             File configFile = new File(configDir, "modularwarfare.json");
-
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
             try {
                 if (configFile.exists()) {
                     try (Reader reader = new FileReader(configFile)) {
                         ModConfig config = gson.fromJson(reader, ModConfig.class);
-                        if (config != null) {
-                            INSTANCE = config;
-                        } else {
-                            INSTANCE = new ModConfig();
-                            saveConfig(configFile, gson, INSTANCE);
-                        }
+                        INSTANCE = config != null ? config : new ModConfig();
                     }
                 } else {
                     INSTANCE = new ModConfig();
-                    saveConfig(configFile, gson, INSTANCE);
                 }
+                saveConfig(configFile, gson, INSTANCE);
             } catch (Exception e) {
-                e.printStackTrace();
                 INSTANCE = new ModConfig();
             }
         }

@@ -11,6 +11,7 @@ import com.modularwarfare.client.model.renders.RenderAttachment;
 import com.modularwarfare.client.model.renders.RenderGunStatic;
 import com.modularwarfare.client.model.renders.RenderParameters;
 import com.modularwarfare.common.guns.ItemAttachment;
+import com.modularwarfare.common.guns.ItemGun;
 import com.modularwarfare.common.network.BackWeaponsManager;
 import com.modularwarfare.common.type.BaseItem;
 import com.modularwarfare.common.type.BaseType;
@@ -30,7 +31,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class ClientRenderHooks {
     public static HashMap<LivingEntity, AnimStateMachine> weaponAnimations = new HashMap<>();
@@ -63,13 +63,37 @@ public class ClientRenderHooks {
 
     @SubscribeEvent
     public void renderHand(RenderHandEvent event) {
-        // Hand rendering logic
+        Minecraft mc = Minecraft.getInstance();
+
+        if (mc.player == null) return;
+
+        ItemStack heldItem = mc.player.getMainHandItem();
+
+        if (heldItem.isEmpty()) return;
+
+        if (heldItem.getItem() instanceof ItemGun) {
+            event.getPoseStack().pushPose();
+
+            // Рендер оружия от первого лица
+            if (ClientProxy.gunStaticRenderer != null) {
+                ClientProxy.gunStaticRenderer.renderItem(
+                        CustomItemRenderType.EQUIPPED_FIRST_PERSON,
+                        heldItem,
+                        mc.level,
+                        mc.player,
+                        event.getPartialTick()
+                );
+            }
+
+            event.getPoseStack().popPose();
+            event.setCanceled(true); // Отменяем стандартный рендер руки
+        }
     }
 
     @SubscribeEvent
     public void renderPlayer(RenderPlayerEvent.Pre event) {
         Player player = event.getEntity();
-        // Исправлено: приведение к AbstractClientPlayer (правильный класс для 1.20.1)
+
         if (player instanceof AbstractClientPlayer abstractClientPlayer) {
             ItemStack backWeapon = BackWeaponsManager.INSTANCE.getItemToRender(abstractClientPlayer);
 
@@ -78,7 +102,13 @@ public class ClientRenderHooks {
 
                 event.getPoseStack().pushPose();
                 if (type != null && customRenderers[type.id] != null) {
-                    customRenderers[type.id].renderItem(CustomItemRenderType.BACK, backWeapon, mc.level, player, partialTicks);
+                    customRenderers[type.id].renderItem(
+                            CustomItemRenderType.BACK,
+                            backWeapon,
+                            mc.level,
+                            player,
+                            partialTicks
+                    );
                 }
                 event.getPoseStack().popPose();
             }

@@ -26,7 +26,10 @@ public class BaseType {
 
     public void loadBaseValues() {
         if (FMLEnvironment.dist == Dist.CLIENT) {
-            reloadModel();
+            // НЕ ПЕРЕЗАПИСЫВАЕМ МОДЕЛЬ, ЕСЛИ ОНА УЖЕ ЗАГРУЖЕНА ИЗ RENDER.JSON
+            if (this.model == null && this.bipedModel == null) {
+                reloadModel();
+            }
         }
         if (modelSkins == null) {
             modelSkins = new SkinType[]{SkinType.getDefaultSkin(this)};

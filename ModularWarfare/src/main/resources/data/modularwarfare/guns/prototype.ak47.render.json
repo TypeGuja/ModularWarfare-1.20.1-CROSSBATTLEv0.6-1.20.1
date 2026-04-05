@@ -1,0 +1,45 @@
+{
+  "modelFileName": "ak47.obj",
+  "extra": {
+    "modelScale": 1.2,
+    "reloadAnimation": "rifle",
+    "translateAll": [0, 0, 0],
+    "modelRecoilBackwards": 0.15,
+    "modelRecoilUpwards": 1.0,
+    "modelRecoilShake": 0.5,
+    "adsSpeed": 0.02
+  },
+  "aim": {
+    "rotateHipPosition": [0, 0, 0],
+    "translateHipPosition": [0, 0, 0],
+    "rotateAimPosition": [0, 0.065, 0.3],
+    "translateAimPosition": [0.14, 0.01, 0]
+  },
+  "sprint": {
+    "sprintRotate": [-20.0, 30.0, 0],
+    "sprintTranslate": [0.5, -0.1, -0.65]
+  },
+  "arms": {
+    "leftHandAmmo": true,
+    "actionArm": "Left",
+    "actionType": "Charge",
+    "leftArm": {
+      "armScale": [0.8, 0.8, 0.8],
+      "armPos": [0.25, -0.59, 0.06],
+      "armRot": [65.0, 32.0, -46.0],
+      "armReloadPos": [-0.1, -0.65, 0.02],
+      "armReloadRot": [35.0, 0, -25.0],
+      "armChargePos": [0, 0, 0],
+      "armChargeRot": [0, 0, 0]
+    },
+    "rightArm": {
+      "armScale": [0.8, 0.8, 0.8],
+      "armPos": [0.26, -0.65, 0],
+      "armRot": [0, 0, -90.0],
+      "armReloadPos": [0.27, -0.65, 0.04],
+      "armReloadRot": [0, 0, -90.0],
+      "armChargePos": [0.47, -0.39, 0.14],
+      "armChargeRot": [0, 0, -90.0]
+    }
+  }
+}
