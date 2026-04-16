@@ -6,36 +6,39 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.UUID;
+
 public class PacketAimingRequest extends PacketBase {
-    public String playername;
+    public UUID playerUUID;
     public boolean aiming;
 
     public PacketAimingRequest() {}
 
-    public PacketAimingRequest(String playername, boolean aiming) {
-        this.playername = playername;
+    public PacketAimingRequest(UUID playerUUID, boolean aiming) {
+        this.playerUUID = playerUUID;
         this.aiming = aiming;
     }
 
     @Override
     public void encodeInto(FriendlyByteBuf buffer) {
-        buffer.writeUtf(playername);
+        buffer.writeUUID(playerUUID);
         buffer.writeBoolean(aiming);
     }
 
     @Override
     public void decodeInto(FriendlyByteBuf buffer) {
-        this.playername = buffer.readUtf();
+        this.playerUUID = buffer.readUUID();
         this.aiming = buffer.readBoolean();
     }
 
     @Override
     public void handleServerSide(Player player) {
         if (player instanceof ServerPlayer) {
-            if (!ServerTickHandler.playerAimShootCooldown.containsKey(playername)) {
-                ModularWarfare.NETWORK.sendToAll(new PacketAimingReponse(playername, aiming));
+            // Исправлено: используем playerUUID везде
+            if (!ServerTickHandler.playerAimShootCooldown.containsKey(playerUUID)) {
+                ModularWarfare.NETWORK.sendToAll(new PacketAimingReponse(playerUUID, aiming));
             }
-            ServerTickHandler.playerAimInstant.put(playername, aiming);
+            ServerTickHandler.playerAimInstant.put(playerUUID, aiming);
         }
     }
 

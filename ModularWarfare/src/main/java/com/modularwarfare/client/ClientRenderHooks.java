@@ -1,27 +1,18 @@
 package com.modularwarfare.client;
 
-import com.modularwarfare.api.AnimationUtils;
+import com.modularwarfare.ModularWarfare;
 import com.modularwarfare.client.anim.AnimStateMachine;
-import com.modularwarfare.client.gui.GuiInventoryModified;
-import com.modularwarfare.client.hud.GunUI;
 import com.modularwarfare.client.model.objects.CustomItemRenderType;
 import com.modularwarfare.client.model.objects.CustomItemRenderer;
 import com.modularwarfare.client.model.renders.RenderAmmo;
 import com.modularwarfare.client.model.renders.RenderAttachment;
 import com.modularwarfare.client.model.renders.RenderGunStatic;
 import com.modularwarfare.client.model.renders.RenderParameters;
-import com.modularwarfare.common.guns.ItemAttachment;
 import com.modularwarfare.common.guns.ItemGun;
 import com.modularwarfare.common.network.BackWeaponsManager;
 import com.modularwarfare.common.type.BaseItem;
 import com.modularwarfare.common.type.BaseType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -54,10 +45,6 @@ public class ClientRenderHooks {
         if (event.phase == TickEvent.Phase.START) {
             RenderParameters.smoothing = event.renderTickTime;
             this.partialTicks = event.renderTickTime;
-        } else if (event.phase == TickEvent.Phase.END) {
-            if (mc.player != null && mc.level != null && GunUI.hitMarkerTime > 0) {
-                GunUI.hitMarkerTime--;
-            }
         }
     }
 
@@ -65,28 +52,34 @@ public class ClientRenderHooks {
     public void renderHand(RenderHandEvent event) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (mc.player == null) return;
+        if (mc.player == null || mc.level == null) return;
 
         ItemStack heldItem = mc.player.getMainHandItem();
 
         if (heldItem.isEmpty()) return;
 
         if (heldItem.getItem() instanceof ItemGun) {
-            event.getPoseStack().pushPose();
+            event.setCanceled(true);
 
-            // Рендер оружия от первого лица
+            // ВАЖНО: Получаем AnimStateMachine
+            AnimStateMachine anim = getAnimMachine(mc.player);
+
+            ModularWarfare.LOGGER.info("RenderHand: rendering gun with anim=" + anim);
+
             if (ClientProxy.gunStaticRenderer != null) {
                 ClientProxy.gunStaticRenderer.renderItem(
                         CustomItemRenderType.EQUIPPED_FIRST_PERSON,
                         heldItem,
                         mc.level,
                         mc.player,
-                        event.getPartialTick()
+                        anim,                   // <-- ВАЖНО!
+                        event.getPoseStack(),
+                        event.getMultiBufferSource(),
+                        event.getPackedLight()
                 );
+            } else {
+                ModularWarfare.LOGGER.error("gunStaticRenderer is null!");
             }
-
-            event.getPoseStack().popPose();
-            event.setCanceled(true); // Отменяем стандартный рендер руки
         }
     }
 
@@ -94,14 +87,14 @@ public class ClientRenderHooks {
     public void renderPlayer(RenderPlayerEvent.Pre event) {
         Player player = event.getEntity();
 
-        if (player instanceof AbstractClientPlayer abstractClientPlayer) {
+        if (player instanceof net.minecraft.client.player.AbstractClientPlayer abstractClientPlayer) {
             ItemStack backWeapon = BackWeaponsManager.INSTANCE.getItemToRender(abstractClientPlayer);
 
-            if (!backWeapon.isEmpty() && backWeapon.getItem() instanceof BaseItem) {
-                BaseType type = ((BaseItem) backWeapon.getItem()).baseType;
+            if (!backWeapon.isEmpty() && backWeapon.getItem() instanceof BaseItem baseItem) {
+                BaseType type = baseItem.baseType;
 
                 event.getPoseStack().pushPose();
-                if (type != null && customRenderers[type.id] != null) {
+                if (type != null && type.id < customRenderers.length && customRenderers[type.id] != null) {
                     customRenderers[type.id].renderItem(
                             CustomItemRenderType.BACK,
                             backWeapon,
@@ -116,11 +109,6 @@ public class ClientRenderHooks {
     }
 
     public static AnimStateMachine getAnimMachine(Player player) {
-        if (weaponAnimations.containsKey(player)) {
-            return weaponAnimations.get(player);
-        }
-        AnimStateMachine anim = new AnimStateMachine();
-        weaponAnimations.put(player, anim);
-        return anim;
+        return weaponAnimations.computeIfAbsent(player, k -> new AnimStateMachine());
     }
 }

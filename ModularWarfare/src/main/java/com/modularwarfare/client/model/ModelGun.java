@@ -1,5 +1,6 @@
 package com.modularwarfare.client.model;
 
+import com.modularwarfare.loader.api.AbstractObjModel;
 import com.modularwarfare.loader.api.ObjModelLoader;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -43,41 +44,33 @@ public class ModelGun extends MWModelBase {
         if (config != null && config.modelFileName != null && !config.modelFileName.isEmpty()) {
             String modelPath = config.modelFileName;
 
-            if (!modelPath.endsWith(".obj")) {
-                modelPath = modelPath + ".obj";
+            // Убираем расширение если оно уже есть в пути
+            if (modelPath.endsWith(".obj")) {
+                modelPath = modelPath.substring(0, modelPath.length() - 4);
             }
 
-            String[] pathsToTry = {
-                    "assets/modularwarfare/obj/guns/" + modelPath,
-                    "obj/guns/" + modelPath,
-                    modelPath
-            };
+            // Формируем полный путь
+            String fullPath = "obj/guns/" + modelPath + ".obj";
 
-            boolean loaded = false;
+            ModularWarfare.LOGGER.info("Attempting to load model from: " + fullPath);
 
-            for (String tryPath : pathsToTry) {
-                ModularWarfare.LOGGER.info("Trying to load: " + tryPath);
-                try {
-                    this.staticModel = ObjModelLoader.load(tryPath);
-                    if (this.staticModel != null && !this.staticModel.getParts().isEmpty()) {
-                        ModularWarfare.LOGGER.info("✅ SUCCESS! Loaded from: " + tryPath);
-                        ModularWarfare.LOGGER.info("   Parts: " + this.staticModel.getParts().size());
-                        for (String partName : this.staticModel.getParts().keySet()) {
-                            ModularWarfare.LOGGER.info("     - Part: " + partName);
-                        }
-                        loaded = true;
-                        break;
-                    }
-                } catch (Exception e) {
-                    ModularWarfare.LOGGER.warn("Failed: " + e.getMessage());
+            try {
+                this.staticModel = ObjModelLoader.load(fullPath);
+
+                if (this.staticModel != null && !this.staticModel.getParts().isEmpty()) {
+                    ModularWarfare.LOGGER.info("SUCCESS! Loaded model for " + type.internalName);
+                    ModularWarfare.LOGGER.info("  Parts loaded: " + this.staticModel.getParts().size());
+                } else {
+                    ModularWarfare.LOGGER.error("Model loaded but has no parts: " + type.internalName);
+                    this.staticModel = new AbstractObjModel();
                 }
-            }
-
-            if (!loaded) {
-                ModularWarfare.LOGGER.error("❌ Could not load model for " + type.internalName);
+            } catch (Exception e) {
+                ModularWarfare.LOGGER.error("Failed to load model for " + type.internalName + ": " + e.getMessage());
+                this.staticModel = new AbstractObjModel();
             }
         } else {
             ModularWarfare.LOGGER.warn("No modelFileName in config for: " + type.internalName);
+            this.staticModel = new AbstractObjModel();
         }
 
         ModularWarfare.LOGGER.info("========================================");

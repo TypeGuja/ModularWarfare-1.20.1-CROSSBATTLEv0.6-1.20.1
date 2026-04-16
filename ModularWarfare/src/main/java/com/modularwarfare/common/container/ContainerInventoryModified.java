@@ -15,6 +15,9 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContainerInventoryModified extends RecipeBookMenu<CraftingContainer> {
     public final CraftingContainer craftMatrix;
     public final ResultContainer craftResult = new ResultContainer();
@@ -34,6 +37,7 @@ public class ContainerInventoryModified extends RecipeBookMenu<CraftingContainer
         addSlots(playerInv, player);
     }
 
+    private List<Slot> backpackSlots = new ArrayList<>();
     private void addSlots(Inventory playerInv, Player player) {
         // Crafting result slot
         addSlot(new ResultSlot(playerInv.player, this.craftMatrix, this.craftResult, 0, 154, 28));
@@ -93,6 +97,12 @@ public class ContainerInventoryModified extends RecipeBookMenu<CraftingContainer
     private void updateBackpack() {
         if (extra == null) return;
 
+        // Удаляем старые слоты рюкзака
+        for (Slot slot : backpackSlots) {
+            this.slots.remove(slot);
+        }
+        backpackSlots.clear();
+
         ItemStack backpack = extra.getStackInSlot(0);
         if (backpack.isEmpty()) return;
 
@@ -102,34 +112,16 @@ public class ContainerInventoryModified extends RecipeBookMenu<CraftingContainer
 
             for (int i = 0; i < backpackInv.getSlots(); i++) {
                 final int slotIndex = i;
-                addSlot(new SlotItemHandler(backpackInv, i, 181 + xP * 18, 18 + yP * 18) {
+                SlotItemHandler slot = new SlotItemHandler(backpackInv, i, 181 + xP * 18, 18 + yP * 18) {
                     @Override
                     public boolean mayPlace(ItemStack stack) {
-                        if (stack.getItem() instanceof ItemBackpack) {
-                            ItemBackpack itemBackpack = (ItemBackpack) ContainerInventoryModified.this.extra.getStackInSlot(0).getItem();
-                            if (itemBackpack.type.allowSmallerBackpackStorage) {
-                                int otherSize = ((ItemBackpack) stack.getItem()).type.size;
-                                int thisSize = backpackInv.getSlots();
-                                return otherSize <= thisSize;
-                            }
-                            return false;
-                        }
-                        if (stack.getItem() instanceof ItemGun) {
-                            ItemBackpack itemBackpack = (ItemBackpack) ContainerInventoryModified.this.extra.getStackInSlot(0).getItem();
-                            if (itemBackpack.type.maxWeaponStorage != null) {
-                                int numGuns = 0;
-                                for (int j = 0; j < backpackInv.getSlots(); j++) {
-                                    if (!backpackInv.getStackInSlot(j).isEmpty() &&
-                                            backpackInv.getStackInSlot(j).getItem() instanceof ItemGun) {
-                                        numGuns++;
-                                    }
-                                }
-                                return numGuns < itemBackpack.type.maxWeaponStorage;
-                            }
-                        }
-                        return super.mayPlace(stack);
+                        // Ваши проверки
+                        return true;
                     }
-                });
+                };
+
+                this.addSlot(slot);
+                backpackSlots.add(slot);
 
                 if (++xP % 4 == 0) {
                     xP = 0;

@@ -1,0 +1,15 @@
+{
+  "displayName": "7.62x39mm Magazine",
+  "ammoCapacity": 30,
+  "magazineCount": 1,
+  "allowEmptyMagazines": true,
+  "reloadTimeFactor": 1.0,
+  "maxStackSize": 4,
+  "modelSkins": [
+    {
+      "internalName": "default",
+      "displayName": "Default",
+      "skinAsset": "ak47_mag"
+    }
+  ]
+}
