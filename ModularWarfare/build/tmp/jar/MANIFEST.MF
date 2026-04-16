@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Specification-Title: modularwarfare
+Specification-Vendor: ModularWarfare
+Specification-Version: 1
+Implementation-Title: untitled
+Implementation-Version: 1.0.1f
+Implementation-Vendor: ModularWarfare
+Implementation-Timestamp: 2026-04-16T11:27:00+0400
+
