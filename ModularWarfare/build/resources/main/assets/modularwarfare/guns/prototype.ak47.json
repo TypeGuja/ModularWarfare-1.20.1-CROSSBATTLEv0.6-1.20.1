@@ -1,0 +1,68 @@
+{
+  "displayName": "AK-47",
+  "weaponType": "RIFLE",
+  "gunDamage": 35.0,
+  "gunDamageHeadshotBonus": 35.0,
+  "weaponMaxRange": 200,
+  "weaponEffectiveRange": 50,
+  "numBullets": 1,
+  "bulletSpread": 2.5,
+  "roundsPerMin": 600,
+  "numBurstRounds": 3,
+  "recoilPitch": 12.0,
+  "recoilYaw": 2.0,
+  "randomRecoilPitch": 0.8,
+  "randomRecoilYaw": 0.5,
+  "recoilAimReducer": 0.8,
+  "accuracySneakFactor": 0.75,
+  "fireModes": ["SEMI", "FULL"],
+  "reloadTime": 45,
+  "offhandReloadTime": null,
+  "acceptedAmmo": ["prototype.ak47ammo"],
+  "acceptedAttachments": {
+    "sight": ["reddot_sight", "acog_sight"],
+    "grip": ["vertical_grip"],
+    "barrel": ["suppressor"]
+  },
+  "allowSprintFiring": true,
+  "allowDefaultSounds": true,
+  "modelSkins": [
+    {
+      "internalName": "default",
+      "displayName": "Default",
+      "skinAsset": "ak47"
+    }
+  ],
+  "weaponSoundMap": {
+    "Fire": [
+      {
+        "soundEvent": "Fire",
+        "soundName": "ak47_fire",
+        "soundRange": 64,
+        "soundVolumeMultiplier": 1.0,
+        "soundPitch": 1.0,
+        "soundRandomPitch": 5.0
+      }
+    ],
+    "Reload": [
+      {
+        "soundEvent": "Reload",
+        "soundName": "ak47_reload",
+        "soundRange": 16,
+        "soundVolumeMultiplier": 1.0,
+        "soundPitch": 1.0,
+        "soundRandomPitch": 5.0
+      }
+    ],
+    "DryFire": [
+      {
+        "soundEvent": "DryFire",
+        "soundName": "defemptyclick",
+        "soundRange": 8,
+        "soundVolumeMultiplier": 1.0,
+        "soundPitch": 1.0,
+        "soundRandomPitch": 5.0
+      }
+    ]
+  }
+}
